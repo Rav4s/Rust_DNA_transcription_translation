@@ -1,3 +1,5 @@
+#[cfg(test)]
+
 use std::io;
 use std::str;
 use std::process;
@@ -132,14 +134,10 @@ fn translation(inter_codons: Vec<String>) -> Vec<String> {
     return amino_acids_list;
 }
 
-fn main() {
+fn test() {
     println!("Enter the DNA strand to be transcribed and translated: ");
 
-    let mut strand = String::new();
-
-    io::stdin()
-        .read_line(&mut strand)
-        .expect("Failed to read line");
+    let mut strand: String = "TACATGCCATACGAGACGAGCGCGCCTAAGCGGCGCAGACTCATGGTCATT".to_string();
 
     strand = strand.to_uppercase();
 
@@ -157,4 +155,9 @@ fn main() {
     for i in amino_acids_list {
         print!("{}, ", i);
     }
+}
+
+#[test]
+fn main() {
+    test();
 }
