@@ -47,25 +47,52 @@ fn break_into_codons(inter_rna: String) -> Vec<String> {
 }
 
 fn find_stop(inter_codons: &[String]) -> usize {
+    let mut stop_index_1: usize = usize::MAX;
+    let mut stop_index_2: usize = usize::MAX;
+    let mut stop_index_3: usize = usize::MAX;
+
     if inter_codons.iter().any(|i| i == "UAA") {
-        println!("UAA stop codon found!");
-        let stop_index = inter_codons.iter().position(|r| r == "UAA").unwrap();
-        return stop_index;
+        stop_index_1 = inter_codons.iter().position(|r| r == "UAA").unwrap();
     }
-    else if inter_codons.iter().any(|i| i == "UAG") {
-        println!("UAG stop codon found!");
-        let stop_index = inter_codons.iter().position(|r| r == "UAG").unwrap();
-        return stop_index;
+    if inter_codons.iter().any(|i| i == "UAG") {
+        stop_index_2 = inter_codons.iter().position(|r| r == "UAG").unwrap();
     }
-    else if inter_codons.iter().any(|i| i == "UGA") {
-        println!("UGA stop codon found!");
-        let stop_index = inter_codons.iter().position(|r| r == "UGA").unwrap();
-        return stop_index;
+    if inter_codons.iter().any(|i| i == "UGA") {
+        stop_index_3 = inter_codons.iter().position(|r| r == "UGA").unwrap();
+    }
+
+    let stop_index = find_first(stop_index_1, stop_index_2, stop_index_3);
+
+    return stop_index;
+}
+
+fn find_first(stop_index_1: usize, stop_index_2: usize, stop_index_3: usize) -> usize {
+    let mut stop_index: usize = 1;
+
+    if stop_index_1 < stop_index_2 {
+        if stop_index_1 < stop_index_3{
+            println!("UAA stop codon found!");
+            stop_index = stop_index_1;
+        }
+    }
+    else if stop_index_2 < stop_index_1 {
+        if stop_index_2 < stop_index_3 {
+            println!("UAG stop codon found!");
+            stop_index = stop_index_2;
+        }
+    }
+    else if stop_index_3 < stop_index_1 {
+        if stop_index_3 < stop_index_2 {
+            println!("UGA stop codon found!");
+            stop_index = stop_index_3;
+        }
     }
     else {
         println!("No stop codon found!");
         process::exit(1);
     }
+
+    return stop_index;
 }
 
 fn translation(inter_codons: Vec<String>) {
